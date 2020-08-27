@@ -48,6 +48,7 @@ const Scene = () => {
           title={'Dynamic features'} 
           selectedFeature={selectedDynamicFeature}
           selectFeature={setSelectedDynamicFeature}
+          resetSelections={resetSelections}
           />
         </Grid.Item>
     </Grid.Layout>

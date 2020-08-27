@@ -2,9 +2,9 @@ import React from 'react'
 import styled from 'styled-components'
 import { useMutation } from '@apollo/client';
 import axios from 'axios'
+import { ReactComponent as LinkIcon } from '../../assets/link.svg'
 
 import { ADD_FEATURE_LINK } from './queries'
-import Grid from '../Grid'
 
 
 const Button = styled.button`
@@ -24,6 +24,22 @@ cursor: pointer;
 }
 `
 
+const NakedButton = styled.button`
+font-size: 20px;
+width: 200px;
+border-radius: 8px;
+padding: 12px;
+border: none;
+outline: none;
+cursor: pointer;
+color: #3d3d3d;
+
+&:active {
+  opacity: 0.7;
+  transform: translateY(4px)
+}
+`
+
 const finalizeEndpoint = 'http://localhost:8080/api/vehicles/2/finalize'
 axios.defaults.headers.common.Authorization = `Bearer YouShallPass`;
 
@@ -31,23 +47,44 @@ const Container = styled.div`
 padding: 24px;
 display: flex;
 flex-direction: row;
+justify-content: flex-end;
+`
+
+const FlexGrow = styled.div`
+display: flex;
+flex-direction: column;
+flex-grow: 1;
+`
+
+const StyledLinkIcon = styled(LinkIcon)`
+height: 20px;
+width: 20px;
+fill: #3d3d3d;
+margin-right: 16px;
+
+&:hover {
+  opacity: 0.7;
+}
 `
 
 const SieBar = ({ selectedStandardFeatureId, selectedDynamicFeatureId, resetSelections }) => {
   const [addFeatureLink, { data }] = useMutation(ADD_FEATURE_LINK, { onCompleted: resetSelections });
   return (
     <Container>
-    <Grid.Layout rows={1} columns={2} gap={'48px'}>
-      <Button onClick={() => addFeatureLink({ 
+      {console.log('datadata', data)}
+      <FlexGrow>
+      <NakedButton onClick={() => addFeatureLink({ 
         variables: { input: { 
           featureId: selectedStandardFeatureId, 
           linkedFeatureId: selectedDynamicFeatureId 
           } }
         })}>
+        <StyledLinkIcon />
+
       Add Link
-      </Button>
+      </NakedButton>
+      </FlexGrow>
       <Button onClick={() => axios.post(finalizeEndpoint)} >Publish</Button>
-    </Grid.Layout>
     </Container>
 
   )

@@ -25,6 +25,10 @@ query GetVehicle($input: QueryVehicleInput!) {
       }
       linkedFeatures {
         id
+        price
+        packageName
+        isRare
+        isValuable
         genericFeature {
           id
           name

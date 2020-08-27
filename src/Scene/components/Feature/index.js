@@ -1,6 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { ReactComponent as LinkIcon } from '../../assets/link.svg'
+import LinkedFeaturesModal from './LinkedFeaturesModal';
+import PhotoViewModal from './PhotoViewModal';
 
 const Card = styled.div`
 display: flex;
@@ -85,26 +87,41 @@ const ValueIndicator = ({ feature }) => (
   </ValueIndicatorContainer>
 )
 
-const Feature = ({ feature, selectedFeature, selectFeature }) => {
-  console.log('DEEZE', feature.id, selectedFeature)
-  console.log('selected', feature.id === selectedFeature)
+const Feature = ({ feature, selectedFeature, selectFeature, resetSelections }) => {
+  const [linkModalOpen, setLinkModalOpen] = useState(false)
+  const [photoViewModalOpen, setPhotoViewModalOpen] = useState(false)
   return (
-  <Card onClick={() => {
+  <Card  selected={feature.id === selectedFeature} isDynamic={feature.genericFeature.sourceType.name === 'dynamic'}>
+    <Title isDynamic={feature.genericFeature.sourceType.name === 'dynamic'} 
+    onClick={() => {
     console.log('Clicking!')
-    selectFeature(feature.id)
-    }} selected={feature.id === selectedFeature} isDynamic={feature.genericFeature.sourceType.name === 'dynamic'}>
-    <Title isDynamic={feature.genericFeature.sourceType.name === 'dynamic'}>
+    if(feature.id === selectedFeature) {
+      selectFeature(null)
+    } else {
+      selectFeature(feature.id)
+    }
+    }}>
       {feature.genericFeature.name}
     </Title>
     <Content>
     {feature.genericFeature.sourceType.name === 'dynamic' && <ValueIndicator feature={feature} />}
-    {feature.file && <FileImage src={feature.file?.url}/>}
+    {feature.file && <FileImage src={feature.file?.url} onClick={e => {
+      e.stopPropagation()
+      setPhotoViewModalOpen(true)
+      }}/>}
     {feature.linkedFeatures?.length > 0 && 
-    <LinkRow>
+    <LinkRow onClick={e => {
+      e.stopPropagation()
+      setLinkModalOpen(true)
+      }}>
       <StyledLinkIcon />
       <div>{feature.linkedFeatures.length}</div>
     </LinkRow>}
     </Content>
+    <LinkedFeaturesModal linkedFeatures={feature.linkedFeatures} isOpen={linkModalOpen} close={() => {
+      setLinkModalOpen(false)
+      }} />
+    <PhotoViewModal isOpen={photoViewModalOpen} close={() => setPhotoViewModalOpen(false)} url={feature.file?.url} />
   </Card>
   )
 }

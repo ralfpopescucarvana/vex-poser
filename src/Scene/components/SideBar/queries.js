@@ -6,11 +6,13 @@ mutation AddFeatureLink($input: AddFeatureLinkInput!) {
         feature {
           id
           genericFeature {
+            id
             name
           }
           linkedFeatures {
             id
             genericFeature {
+              id
               name
             }
           }
@@ -18,6 +20,7 @@ mutation AddFeatureLink($input: AddFeatureLinkInput!) {
     		linkedFeature {
           id
           genericFeature {
+            id
             name
           }
         }
